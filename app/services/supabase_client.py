@@ -1,13 +1,12 @@
 import json
 import os
 from dataclasses import dataclass
-from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
-from dotenv import load_dotenv
+from app.utils.env import load_env_file
 
 try:
     from supabase import Client, create_client as supabase_create_client  # type: ignore[import-not-found]
@@ -16,19 +15,42 @@ except ImportError:
     supabase_create_client = None
 
 
-load_dotenv()
+load_env_file()
 
 
 @dataclass
 class SupabaseSettings:
     url: str
-    key: str
+    auth_key: str
+    rest_key: str
+
+
+def _first_env(*names: str, default: str = "") -> str:
+    for name in names:
+        value = os.getenv(name)
+        if value:
+            return value.strip()
+    return default
 
 
 def get_settings() -> SupabaseSettings:
     return SupabaseSettings(
         url=os.getenv("SUPABASE_URL", "https://SEU_PROJETO_AQUI.supabase.co"),
-        key=os.getenv("SUPABASE_KEY", "SUA_CHAVE_ANON_AQUI"),
+        auth_key=_first_env(
+            "SUPABASE_ANON_KEY",
+            "SUPABASE_PUBLISHABLE_KEY",
+            "SUPABASE_PUBLIC_KEY",
+            "publish",
+            "SUPABASE_KEY",
+            default="SUA_CHAVE_ANON_AQUI",
+        ),
+        rest_key=_first_env(
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "SUPABASE_SECRET_KEY",
+            "SUPABASE_KEY",
+            "publish",
+            default="SUA_CHAVE_ANON_AQUI",
+        ),
     )
 
 
@@ -154,15 +176,28 @@ class _HTTPClient:
         return _HTTPTableClient(self, table_name)
 
 
-def create_supabase_client(access_token: str | None = None):
+def create_supabase_client(access_token: str | None = None, purpose: str = "rest"):
     settings = get_settings()
     # Futuras integrações com auditoria, service role e persistência avançada podem ser centralizadas aqui.
+    key = settings.auth_key if purpose == "auth" else settings.rest_key
     if supabase_create_client is not None:
-        client = supabase_create_client(settings.url, settings.key)
+        client = supabase_create_client(settings.url, key)
         if access_token and hasattr(client, "postgrest"):
             try:
                 client.postgrest.auth(access_token)  # type: ignore[attr-defined]
             except Exception:
                 pass
         return client
-    return _HTTPClient(settings.url, settings.key, access_token)
+    return _HTTPClient(settings.url, key, access_token)
+
+
+def test_supabase_auth_connection() -> bool:
+    client = create_supabase_client(purpose="auth")
+    try:
+        client.auth.sign_in_with_password({"email": "invalid@example.com", "password": "invalid-password"})
+    except Exception as exc:
+        message = str(exc).lower()
+        if any(token in message for token in ["invalid login credentials", "credenciais", "email not confirmed", "forbidden", "401"]):
+            return True
+        raise
+    return True

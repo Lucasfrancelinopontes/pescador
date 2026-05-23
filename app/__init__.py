@@ -3,11 +3,12 @@ from pathlib import Path
 
 from flask import Flask, session
 from jinja2 import ChoiceLoader, FileSystemLoader
-from dotenv import load_dotenv
+
+from app.utils.env import load_env_file
 
 
 def create_app() -> Flask:
-    load_dotenv()
+    load_env_file()
 
     app = Flask(
         __name__,

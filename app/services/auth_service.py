@@ -7,7 +7,7 @@ from app.services.supabase_client import create_supabase_client
 
 class AuthService:
     def login(self, email: str, password: str) -> dict[str, Any]:
-        supabase = create_supabase_client()
+        supabase = create_supabase_client(purpose="auth")
         response = supabase.auth.sign_in_with_password({"email": email, "password": password})
         return {
             "user_id": response.user.id,

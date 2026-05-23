@@ -23,7 +23,9 @@ cp .env.example .env
 Variáveis usadas:
 - `SECRET_KEY`
 - `SUPABASE_URL`
-- `SUPABASE_KEY`
+- `SUPABASE_ANON_KEY` ou `publish`
+- `SUPABASE_SERVICE_ROLE_KEY` quando necessário
+- `SUPABASE_KEY` como fallback
 
 ## Rodar localmente
 

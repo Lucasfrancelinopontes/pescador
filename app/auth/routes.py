@@ -24,8 +24,14 @@ def login():
             session["user_id"] = auth_data["user_id"]
             flash("Login realizado com sucesso.", "success")
             return redirect(url_for("main.formulario"))
-        except Exception:
-            flash("Credenciais inválidas ou sessão expirada.", "danger")
+        except Exception as exc:
+            error_message = str(exc).lower()
+            if any(token in error_message for token in ["network", "conexão", "connection", "timed out", "urlerror"]):
+                flash("Falha de conexão com o Supabase. Verifique SUPABASE_URL e SUPABASE_KEY.", "danger")
+            elif any(token in error_message for token in ["invalid login credentials", "credenciais", "invalid", "401", "403"]):
+                flash("Credenciais inválidas ou sessão expirada.", "danger")
+            else:
+                flash("Não foi possível autenticar no Supabase.", "danger")
 
     return render_template("login.html")
 
