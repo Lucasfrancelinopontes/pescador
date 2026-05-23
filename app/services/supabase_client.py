@@ -61,6 +61,41 @@ class _HTTPInsertBuilder:
             raise RuntimeError(f"Erro de conexão com o Supabase: {error}") from error
 
 
+class _HTTPDeleteBuilder:
+    def __init__(self, client, table_name: str):
+        self._client = client
+        self._table_name = table_name
+        self._filters: list[tuple[str, str]] = []
+
+    def eq(self, column: str, value):
+        self._filters.append((column, str(value)))
+        return self
+
+    def execute(self):
+        query_string = "&".join(f"{column}=eq.{value}" for column, value in self._filters)
+        endpoint = f"{self._client.base_url}/rest/v1/{self._table_name}"
+        if query_string:
+            endpoint = f"{endpoint}?{query_string}"
+
+        headers = {
+            "apikey": self._client.api_key,
+            "authorization": f"Bearer {self._client.access_token or self._client.api_key}",
+            "accept": "application/json",
+            "prefer": "return=minimal",
+        }
+        request_obj = Request(endpoint, headers=headers, method="DELETE")
+        try:
+            with urlopen(request_obj, timeout=30) as response:
+                raw = response.read().decode("utf-8")
+                data = json.loads(raw) if raw else []
+                return SimpleNamespace(data=data)
+        except HTTPError as error:
+            detail = error.read().decode("utf-8", errors="replace")
+            raise RuntimeError(f"Erro ao excluir no Supabase: {detail}") from error
+        except URLError as error:
+            raise RuntimeError(f"Erro de conexão com o Supabase: {error}") from error
+
+
 class _HTTPTableClient:
     def __init__(self, client, table_name: str):
         self._client = client
@@ -68,6 +103,9 @@ class _HTTPTableClient:
 
     def insert(self, payload: dict):
         return _HTTPInsertBuilder(self._client, self._table_name, payload)
+
+    def delete(self):
+        return _HTTPDeleteBuilder(self._client, self._table_name)
 
 
 class _HTTPAuthClient:

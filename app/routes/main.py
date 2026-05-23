@@ -1,14 +1,17 @@
-from flask import Blueprint, flash, redirect, render_template, request, session, url_for
+from flask import Blueprint, flash, jsonify, redirect, render_template, request, session, url_for
 
+from app.services.coleta_service import ColetaService
 from app.services.supabase_client import create_supabase_client
+from app.utils.auth import login_required
 
 bp = Blueprint("main", __name__)
+coleta_service = ColetaService()
 
 
-def _login_required():
+def _require_auth():
     if not session.get("access_token"):
-        flash("Faça login para acessar o formulário.", "warning")
-        return redirect(url_for("main.login"))
+        flash("Sua sessão expirou. Faça login novamente.", "warning")
+        return redirect(url_for("auth.login"))
     return None
 
 
@@ -16,62 +19,31 @@ def _login_required():
 def index():
     if session.get("access_token"):
         return redirect(url_for("main.formulario"))
-    return redirect(url_for("main.login"))
-
-
-@bp.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        email = request.form.get("email", "").strip()
-        password = request.form.get("password", "")
-
-        if not email or not password:
-            flash("Informe email e senha.", "danger")
-            return render_template("login.html")
-
-        try:
-            supabase = create_supabase_client()
-            auth_response = supabase.auth.sign_in_with_password({"email": email, "password": password})
-
-            session["access_token"] = auth_response.session.access_token
-            session["refresh_token"] = auth_response.session.refresh_token
-            session["user_email"] = auth_response.user.email
-            session["user_id"] = auth_response.user.id
-
-            flash("Login realizado com sucesso.", "success")
-            return redirect(url_for("main.formulario"))
-        except Exception:
-            flash("Falha no login. Verifique suas credenciais.", "danger")
-
-    return render_template("login.html")
-
-
-@bp.route("/logout")
-def logout():
-    session.clear()
-    flash("Sessão encerrada.", "info")
-    return redirect(url_for("main.login"))
+    return redirect(url_for("auth.login"))
 
 
 @bp.route("/formulario", methods=["GET", "POST"])
+@login_required
 def formulario():
-    guard = _login_required()
-    if guard:
-        return guard
-
     if request.method == "POST":
-        # Futuras validações de schema e normalização dos campos podem entrar aqui.
         client = create_supabase_client(session.get("access_token"))
-        dados = request.form.to_dict(flat=True)
-        dados["entrega_atravessador"] = request.form.get("entrega_atravessador") == "on"
-        dados["created_by"] = session.get("user_id")
-        dados["created_by_email"] = session.get("user_email")
-
         try:
-            client.table("coletas").insert(dados).execute()
+            coleta_service.submit_complete(client, request.form, session.get("user_id"))
             flash("Formulário salvo com sucesso.", "success")
             return redirect(url_for("main.formulario"))
         except Exception:
             flash("Não foi possível salvar os dados no Supabase.", "danger")
 
     return render_template("formulario.html")
+
+
+@bp.route("/dashboard")
+@login_required
+def dashboard():
+    return jsonify({"status": "ok", "message": "Dashboard protegido disponível."})
+
+
+@bp.route("/exportacao")
+@login_required
+def exportacao():
+    return jsonify({"status": "ok", "message": "Exportação protegida disponível."})
