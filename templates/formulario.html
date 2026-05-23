@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Formulário do Pescador</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/app.css') }}" rel="stylesheet">
+</head>
+<body>
+  <header class="app-header sticky-top">
+    <div class="container-fluid page-shell py-3 px-3 px-md-4">
+      <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
+        <div>
+          <div class="small-section-title mb-1">Formulário do pescador</div>
+          <h1 class="h4 mb-0">Replicação digital do DOCX</h1>
+        </div>
+        <div class="text-muted small">Preenchimento sequencial, sem backend nesta etapa</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container-fluid page-shell py-4 px-3 px-md-4 pb-5">
+    <div class="panel p-3 p-md-4 mb-4">
+      <div class="d-flex flex-column flex-lg-row gap-3 align-items-lg-center justify-content-between">
+        <div>
+          <div class="small-section-title mb-1">Fluxo</div>
+          <p class="mb-0 text-muted">Navegue pelas etapas na mesma sequência do formulário físico.</p>
+        </div>
+        <div class="step-list" id="stepList" aria-label="Etapas do formulário"></div>
+      </div>
+      <div class="progress mt-3" style="height: 10px;">
+        <div id="wizardProgressBar" class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <form id="wizardForm" class="panel p-3 p-md-4" method="post" action="{{ url_for('main.formulario') }}">
+      <!-- Campos que vieram diretamente do DOCX. -->
+      <!-- Campos dinâmicos. -->
+      <!-- Futuras integrações backend. -->
+      <!-- Futuras validações. -->
+
+      <section class="wizard-step active" data-step="1">
+        <div class="mb-3">
+          <div class="small-section-title">1. Perfil Sócio Econômico / Informações iniciais</div>
+          <h2 class="h5 step-card-title">Código, foto, município e localidade</h2>
+        </div>
+        <div class="row g-3">
+          <div class="col-12 col-md-6 col-xl-3">
+            <label class="form-label">Código coleta</label>
+            <div class="d-flex flex-wrap gap-1">
+              <input class="form-control input-mini" maxlength="1" aria-label="Código coleta 1">
+              <input class="form-control input-mini" maxlength="1" aria-label="Código coleta 2">
+              <input class="form-control input-mini" maxlength="1" aria-label="Código coleta 3">
+              <input class="form-control input-mini" maxlength="1" aria-label="Código coleta 4">
+              <input class="form-control input-mini" maxlength="1" aria-label="Código coleta 5">
+              <input class="form-control input-mini" maxlength="1" aria-label="Código coleta 6">
+            </div>
+            <div class="field-note mt-1">Aparência semelhante ao formulário físico: ____ ____ ____ ____ ____ ____</div>
+          </div>
+          <div class="col-12 col-md-6 col-xl-3">
+            <label class="form-label">Código foto</label>
+            <input class="form-control" name="codigo_foto" placeholder="Código foto">
+          </div>
+          <div class="col-12 col-md-6 col-xl-3">
+            <label class="form-label">Município</label>
+            <input class="form-control" name="municipio" placeholder="Município">
+          </div>
+          <div class="col-12 col-md-6 col-xl-3">
+            <label class="form-label">Localidade</label>
+            <input class="form-control" name="localidade" placeholder="Localidade">
+          </div>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="2">
+        <div class="mb-3">
+          <div class="small-section-title">2. Dados pessoais</div>
+          <h2 class="h5 step-card-title">Identificação do pescador</h2>
+        </div>
+        <div class="row g-3">
+          <div class="col-12 col-lg-6"><label class="form-label">Nome</label><input class="form-control" name="nome"></div>
+          <div class="col-12 col-lg-6"><label class="form-label">Apelido</label><input class="form-control" name="apelido"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Telefone</label><input class="form-control" name="telefone"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Sexo</label><select class="form-select" name="sexo"><option value="">Selecione</option><option>M</option><option>F</option></select></div>
+          <div class="col-12 col-md-4"><label class="form-label">Nascimento</label><input class="form-control" type="date" name="nascimento"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Naturalidade</label><input class="form-control" name="naturalidade"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Estado civil</label><input class="form-control" name="estado_civil"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Composição familiar</label><input class="form-control" name="composicao_familiar"></div>
+          <div class="col-12 col-lg-6"><label class="form-label">Atividade principal renda</label><input class="form-control" name="atividade_principal_renda"></div>
+          <div class="col-12 col-lg-6"><label class="form-label">Atividade secundária renda</label><input class="form-control" name="atividade_secundaria_renda"></div>
+          <div class="col-12"><label class="form-label">Escolaridade</label><input class="form-control" name="escolaridade"></div>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="3">
+        <div class="mb-3">
+          <div class="small-section-title">3. Moradia</div>
+          <h2 class="h5 step-card-title">Local de moradia e tipo de construção</h2>
+        </div>
+        <div class="row g-3">
+          <div class="col-12 col-md-4">
+            <label class="form-label">Comunidade tradicional</label>
+            <select class="form-select" name="moradia_comunidade_tradicional" id="moradiaTipoSelect">
+              <option value="">Selecione</option>
+              <option value="comunidade_tradicional">Comunidade tradicional</option>
+              <option value="sede_municipal">Sede municipal</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-4">
+            <label class="form-label">Sede municipal</label>
+            <input class="form-control" name="moradia_sede_municipal" placeholder="Preenchimento complementar">
+          </div>
+          <div class="col-12 col-md-4" id="moradiaOutroWrap" style="display:none;">
+            <label class="form-label">Outro</label>
+            <input class="form-control" name="moradia_outro" placeholder="Informe outro local de moradia">
+          </div>
+          <div class="col-12 col-md-4">
+            <label class="form-label">Tipo construção</label>
+            <select class="form-select" name="tipo_construcao" id="tipoConstrucaoSelect">
+              <option value="">Selecione</option>
+              <option value="alvenaria">Alvenaria</option>
+              <option value="madeira">Madeira</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-4" id="tipoConstrucaoOutroWrap" style="display:none;">
+            <label class="form-label">Tipo construção - outro</label>
+            <input class="form-control" name="tipo_construcao_outro" placeholder="Informe outro tipo de construção">
+          </div>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="4">
+        <div class="mb-3">
+          <div class="small-section-title">4. Saúde</div>
+          <h2 class="h5 step-card-title">Condições de saúde</h2>
+        </div>
+        <div class="row g-3">
+          <div class="col-12 col-md-4"><div class="form-check"><input class="form-check-input health-check" type="checkbox" id="vista"><label class="form-check-label" for="vista">Vista</label></div></div>
+          <div class="col-12 col-md-4"><div class="form-check"><input class="form-check-input health-check" type="checkbox" id="pele"><label class="form-check-label" for="pele">Pele</label></div></div>
+          <div class="col-12 col-md-4"><div class="form-check"><input class="form-check-input health-check" type="checkbox" id="coluna"><label class="form-check-label" for="coluna">Coluna</label></div></div>
+          <div class="col-12 col-md-4"><div class="form-check"><input class="form-check-input health-check" type="checkbox" id="ginecologico"><label class="form-check-label" for="ginecologico">Ginecológico</label></div></div>
+          <div class="col-12 col-md-4">
+            <div class="form-check"><input class="form-check-input health-check" type="checkbox" id="saudeOutrosCheck"><label class="form-check-label" for="saudeOutrosCheck">Outros</label></div>
+          </div>
+          <div class="col-12" id="saudeOutrosWrap" style="display:none;">
+            <label class="form-label">Outros</label>
+            <input class="form-control" name="saude_outros_texto" placeholder="Detalhe os outros problemas de saúde">
+          </div>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="5">
+        <div class="mb-3">
+          <div class="small-section-title">5. Registros</div>
+          <h2 class="h5 step-card-title">Documentação e carteiras</h2>
+        </div>
+        <div class="row g-3">
+          <div class="col-12 col-lg-4">
+            <label class="form-label">Registro INSS</label>
+            <input class="form-control" name="registro_inss">
+          </div>
+          <div class="col-12 col-lg-4">
+            <label class="form-label">Registro colônia</label>
+            <input class="form-control" name="registro_colonia" id="registroColoniaInput">
+          </div>
+          <div class="col-12 col-lg-4" id="qualColoniaWrap" style="display:none;">
+            <label class="form-label">Qual colônia</label>
+            <input class="form-control" name="qual_colonia">
+          </div>
+          <div class="col-12 col-lg-4">
+            <label class="form-label">Registro associação</label>
+            <input class="form-control" name="registro_associacao" id="registroAssociacaoInput">
+          </div>
+          <div class="col-12 col-lg-4" id="qualAssociacaoWrap" style="display:none;">
+            <label class="form-label">Qual associação</label>
+            <input class="form-control" name="qual_associacao">
+          </div>
+          <div class="col-12 col-lg-4">
+            <label class="form-label">Possui carteira pescador</label>
+            <select class="form-select" name="possui_carteira_pescador" id="possuiCarteiraSelect">
+              <option value="">Selecione</option>
+              <option value="sim">Sim</option>
+              <option value="nao">Não</option>
+            </select>
+          </div>
+          <div class="col-12 col-lg-4" id="carteiraGrandeWrap" style="display:none;">
+            <label class="form-label">Carteira grande marinha</label>
+            <input class="form-control" name="carteira_grande_marinha">
+          </div>
+          <div class="col-12 col-lg-4" id="carteiraPequenaWrap" style="display:none;">
+            <label class="form-label">Carteira pequena colônia</label>
+            <input class="form-control" name="carteira_pequena_colonia">
+          </div>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="6">
+        <div class="mb-3">
+          <div class="small-section-title">6. Relação de trabalho</div>
+          <h2 class="h5 step-card-title">Atividade e dependência econômica</h2>
+        </div>
+        <div class="row g-3">
+          <div class="col-12 col-md-4"><label class="form-label">Há quanto tempo está na atividade</label><input class="form-control" name="tempo_atividade" placeholder="Ex.: 15 anos"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Horas por dia</label><input class="form-control" type="number" min="0" step="0.5" name="horas_por_dia"></div>
+          <div class="col-12 col-md-4">
+            <label class="form-label">Tipo relação trabalho</label>
+            <select class="form-select" name="relacao_trabalho">
+              <option value="">Selecione</option>
+              <option value="familiar">Familiar</option>
+              <option value="vizinhos_amigos">Vizinhos/Amigos</option>
+              <option value="armador">Armador</option>
+              <option value="embarcado">Embarcado</option>
+              <option value="assalariado">Assalariado</option>
+            </select>
+          </div>
+          <div class="col-12"><label class="form-label">Principais fontes renda familiar</label><textarea class="form-control" rows="3" name="fontes_renda_familiar" placeholder="Descreva as fontes de renda familiar"></textarea></div>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="7">
+        <div class="mb-3">
+          <div class="small-section-title">7. Composição da pescaria</div>
+          <h2 class="h5 step-card-title">Estrutura de pesca</h2>
+        </div>
+        <div class="row g-3">
+          <div class="col-12 col-lg-4"><label class="form-label">Categoria pesca</label><input class="form-control" name="categoria_pesca"></div>
+          <div class="col-12 col-lg-4"><label class="form-label">Principal pescaria</label><input class="form-control" name="principal_pescaria"></div>
+          <div class="col-12 col-lg-4"><label class="form-label">Petrecho pesca</label><input class="form-control" name="petrecho_pesca"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Tamanho metros</label><input class="form-control" type="number" step="0.01" name="tamanho_metros"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Tamanho braças</label><input class="form-control" type="number" step="0.01" name="tamanho_bracas"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Unidades</label><input class="form-control" type="number" step="1" name="unidades"></div>
+          <div class="col-12"><label class="form-label">Observação braça</label><input class="form-control" name="observacao_braca"></div>
+          <div class="col-12 col-md-6"><label class="form-label">Material petrecho</label><input class="form-control" name="material_petrecho"></div>
+          <div class="col-12 col-md-6"><label class="form-label">Tipo iscas</label><input class="form-control" name="tipo_iscas"></div>
+          <div class="col-12">
+            <label class="form-label">Processo lançamento recolhimento</label>
+            <textarea class="form-control" rows="6" name="processo_lancamento_recolhimento" placeholder="Descreva o processo de lançamento e recolhimento"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="8">
+        <div class="mb-3">
+          <div class="small-section-title">8. Tipo de pescado capturado</div>
+          <h2 class="h5 step-card-title">Tabela dinâmica</h2>
+        </div>
+        <!-- Tabela dinâmica fiel ao DOCX. -->
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <thead class="table-light">
+              <tr>
+                <th style="width: 80px;">ID</th>
+                <th>Nome comum</th>
+                <th style="width: 180px;">Início safra</th>
+                <th style="width: 180px;">Fim safra</th>
+                <th style="width: 90px;"></th>
+              </tr>
+            </thead>
+            <tbody id="pescadoTableBody"></tbody>
+          </table>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-outline-primary btn-sm" id="addPescadoRow">Adicionar linha</button>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="9">
+        <div class="mb-3">
+          <div class="small-section-title">9. Quadrantes</div>
+          <h2 class="h5 step-card-title">Indique no mapa os quadrantes onde pesca</h2>
+        </div>
+        <div class="row g-3">
+          <div class="col-6 col-md-2"><label class="form-label">Quadrante 1</label><input class="form-control form-control-sm" name="quadrante_1"></div>
+          <div class="col-6 col-md-2"><label class="form-label">Quadrante 2</label><input class="form-control form-control-sm" name="quadrante_2"></div>
+          <div class="col-6 col-md-2"><label class="form-label">Quadrante 3</label><input class="form-control form-control-sm" name="quadrante_3"></div>
+          <div class="col-6 col-md-2"><label class="form-label">Quadrante 4</label><input class="form-control form-control-sm" name="quadrante_4"></div>
+          <div class="col-6 col-md-2"><label class="form-label">Quadrante 5</label><input class="form-control form-control-sm" name="quadrante_5"></div>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="10">
+        <div class="mb-3">
+          <div class="small-section-title">10. Produção e comercialização</div>
+          <h2 class="h5 step-card-title">Produção, volumes e valores</h2>
+        </div>
+        <div class="row g-3">
+          <div class="col-12 col-md-4"><label class="form-label">Média dias embarcado</label><input class="form-control" type="number" name="media_dias_embarcado"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Viagens por mês</label><input class="form-control" type="number" name="viagens_por_mes"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Produção média viagem kg</label><input class="form-control" type="number" step="0.01" name="producao_media_viagem_kg"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Produção média unidades</label><input class="form-control" type="number" step="0.01" name="producao_media_unidades"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Valor primeira qualidade</label><input class="form-control" type="number" step="0.01" name="valor_primeira_qualidade"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Valor segunda qualidade</label><input class="form-control" type="number" step="0.01" name="valor_segunda_qualidade"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Valor terceira qualidade</label><input class="form-control" type="number" step="0.01" name="valor_terceira_qualidade"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Renda mensal</label><input class="form-control" type="number" step="0.01" name="renda_mensal"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Renda por pescaria</label><input class="form-control" type="number" step="0.01" name="renda_por_pescaria"></div>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="11">
+        <div class="mb-3">
+          <div class="small-section-title">11. Petrechos</div>
+          <h2 class="h5 step-card-title">Uso, propriedade e conservação</h2>
+        </div>
+        <div class="row g-3">
+          <div class="col-12 col-lg-4"><label class="form-label">Petrechos próprios</label><input class="form-control" name="petrechos_proprios"></div>
+          <div class="col-12 col-lg-4"><label class="form-label">Se não, de quem</label><input class="form-control" name="petrechos_de_quem"></div>
+          <div class="col-12 col-lg-4"><label class="form-label">Conservação pescado</label><input class="form-control" name="conservacao_pescado"></div>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="12">
+        <div class="mb-3">
+          <div class="small-section-title">12. Despesas na atividade</div>
+          <h2 class="h5 step-card-title">Tabela dinâmica de despesas</h2>
+        </div>
+        <!-- Tabela dinâmica semelhante ao DOCX. -->
+        <div class="table-responsive">
+          <table class="table table-sm align-middle" id="despesasTable">
+            <thead class="table-light">
+              <tr>
+                <th>Despesa</th>
+                <th>Tipo</th>
+                <th>Quantidade</th>
+                <th>Unidade</th>
+                <th>Custo</th>
+                <th>Outros</th>
+                <th>Frequência</th>
+                <th style="width: 90px;"></th>
+              </tr>
+            </thead>
+            <tbody id="despesasTableBody"></tbody>
+          </table>
+        </div>
+        <div class="field-note mb-2">Frequência: diária, semanal, mensal, anual.</div>
+      </section>
+
+      <section class="wizard-step" data-step="13">
+        <div class="mb-3">
+          <div class="small-section-title">13. Dados da embarcação</div>
+          <h2 class="h5 step-card-title">Estrutura de propriedade</h2>
+        </div>
+        <div class="row g-3">
+          <div class="col-12 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" id="pescaEmbarcada"><label class="form-check-label" for="pescaEmbarcada">Pesca embarcada</label></div></div>
+          <div class="col-12 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" id="embarcacaoPropria"><label class="form-check-label" for="embarcacaoPropria">Embarcação própria</label></div></div>
+          <div class="col-12 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" id="financiada"><label class="form-check-label" for="financiada">Financiada</label></div></div>
+          <div class="col-12 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" id="quitada"><label class="form-check-label" for="quitada">Quitada</label></div></div>
+          <div class="col-12 col-lg-6"><label class="form-label">Nome proprietário</label><input class="form-control" name="nome_proprietario"></div>
+          <div class="col-12 col-lg-6"><label class="form-label">Apelido proprietário</label><input class="form-control" name="apelido_proprietario"></div>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="14">
+        <div class="mb-3">
+          <div class="small-section-title">14. Propulsão</div>
+          <h2 class="h5 step-card-title">Sistema de deslocamento</h2>
+        </div>
+        <div class="row g-3">
+          <div class="col-6 col-md-2"><div class="form-check"><input class="form-check-input" type="checkbox" id="vela"><label class="form-check-label" for="vela">Vela</label></div></div>
+          <div class="col-6 col-md-2"><div class="form-check"><input class="form-check-input" type="checkbox" id="motor"><label class="form-check-label" for="motor">Motor</label></div></div>
+          <div class="col-6 col-md-2"><div class="form-check"><input class="form-check-input" type="checkbox" id="remo"><label class="form-check-label" for="remo">Remo</label></div></div>
+          <div class="col-6 col-md-2"><div class="form-check"><input class="form-check-input" type="checkbox" id="vara"><label class="form-check-label" for="vara">Vara</label></div></div>
+          <div class="col-6 col-md-2"><div class="form-check"><input class="form-check-input" type="checkbox" id="rabeta"><label class="form-check-label" for="rabeta">Rabeta</label></div></div>
+          <div class="col-12 col-md-4"><label class="form-label">Cilindros/hp</label><input class="form-control" name="cilindros_hp"></div>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="15">
+        <div class="mb-3">
+          <div class="small-section-title">15. Portos</div>
+          <h2 class="h5 step-card-title">Origem e desembarque</h2>
+        </div>
+        <div class="row g-3">
+          <div class="col-12 col-md-6"><label class="form-label">Porto origem</label><input class="form-control" name="porto_origem"></div>
+          <div class="col-12 col-md-6"><label class="form-label">Porto desembarque</label><input class="form-control" name="porto_desembarque"></div>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="16">
+        <div class="mb-3">
+          <div class="small-section-title">16. Dados técnicos embarcação</div>
+          <h2 class="h5 step-card-title">Especificações técnicas</h2>
+        </div>
+        <div class="row g-3">
+          <div class="col-12 col-md-4"><label class="form-label">Nome embarcação</label><input class="form-control" name="nome_embarcacao"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Comprimento</label><input class="form-control" name="comprimento"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Número registro</label><input class="form-control" name="numero_registro"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Largura</label><input class="form-control" name="largura"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Tonelada bruta</label><input class="form-control" name="tonelada_bruta"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Material casco</label><input class="form-control" name="material_casco"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Tripulação</label><input class="form-control" name="tripulacao"></div>
+          <div class="col-12 col-md-4"><label class="form-label">Ano construção</label><input class="form-control" type="number" name="ano_construcao"></div>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="17">
+        <div class="mb-3">
+          <div class="small-section-title">17. Registros embarcação</div>
+          <h2 class="h5 step-card-title">Documentação da embarcação</h2>
+        </div>
+        <div class="row g-3">
+          <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" id="capitaniaEmbarcacao"><label class="form-check-label" for="capitaniaEmbarcacao">Capitania</label></div></div>
+          <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" id="rgp"><label class="form-check-label" for="rgp">RGP</label></div></div>
+          <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" id="ibama"><label class="form-check-label" for="ibama">IBAMA</label></div></div>
+          <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" id="mpa"><label class="form-check-label" for="mpa">MPA</label></div></div>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="18">
+        <div class="mb-3">
+          <div class="small-section-title">18. Tipo embarcação</div>
+          <h2 class="h5 step-card-title">Classificação visual</h2>
+        </div>
+        <div class="row g-3">
+          <div class="col-12 col-lg-6">
+            <label class="form-label">Tipo embarcação</label>
+            <input class="form-control" name="tipo_embarcacao" placeholder="Tipo embarcação">
+          </div>
+          <div class="col-12 col-lg-6">
+            <div class="drawing-box">
+              <div>
+                <div class="fw-semibold mb-2">Área reservada para desenho/anotação da embarcação</div>
+                <div class="field-note">Não implementar desenho real ainda.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="19">
+        <div class="mb-3">
+          <div class="small-section-title">19. Atravessador</div>
+          <h2 class="h5 step-card-title">Entrega e dívida</h2>
+        </div>
+        <div class="row g-3">
+          <div class="col-12 col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" id="entregaAtravessador"><label class="form-check-label" for="entregaAtravessador">Entrega pescado atravessador</label></div></div>
+          <div class="col-12 col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" id="dividaAtravessador"><label class="form-check-label" for="dividaAtravessador">Dívida atravessador</label></div></div>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="20">
+        <div class="mb-3">
+          <div class="small-section-title">20. Percepções</div>
+          <h2 class="h5 step-card-title">Comparações e volume</h2>
+        </div>
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label">Percepção pesca hoje vs passado</label>
+            <textarea class="form-control" rows="5" name="percepcao_pesca_hoje_vs_passado"></textarea>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Percepção tamanho e volume pescado</label>
+            <textarea class="form-control" rows="5" name="percepcao_tamanho_volume_pescado"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="21">
+        <div class="mb-3">
+          <div class="small-section-title">21. Observações</div>
+          <h2 class="h5 step-card-title">Registro final</h2>
+        </div>
+        <div class="row g-3">
+          <div class="col-12"><label class="form-label">Observações</label><textarea class="form-control" rows="6" name="observacoes"></textarea></div>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="22">
+        <div class="mb-3">
+          <div class="small-section-title">22. Coletor e digitador</div>
+          <h2 class="h5 step-card-title">Finalização</h2>
+        </div>
+        <div class="row g-3">
+          <div class="col-12 col-md-6"><label class="form-label">Coletor</label><input class="form-control" name="coletor"></div>
+          <div class="col-12 col-md-6"><label class="form-label">Data</label><input class="form-control" type="date" name="data_coleta"></div>
+          <div class="col-12 col-md-6"><label class="form-label">Digitador</label><input class="form-control" name="digitador"></div>
+          <div class="col-12 col-md-6"><label class="form-label">Data digitador</label><input class="form-control" type="date" name="data_digitador"></div>
+        </div>
+
+        <div class="alert alert-light border mt-4 mb-0">
+          <div class="fw-semibold mb-1">Futuras integrações backend</div>
+          <div class="small text-muted">Nesta etapa o formulário está somente em frontend. A submissão real pode ser ligada depois ao Supabase ou a outra API.</div>
+        </div>
+      </section>
+
+      <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mt-4 pt-3 border-top">
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-outline-secondary" id="prevBtn">Anterior</button>
+          <button type="button" class="btn btn-outline-primary" id="nextBtn">Próximo</button>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-outline-danger" id="resetBtn">Limpar</button>
+          <button type="button" class="btn btn-success" id="finishBtn">Salvar coleta</button>
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <template id="pescadoRowTemplate">
+    <tr class="dyn-row">
+      <td><input class="form-control form-control-sm" name="pescado_id[]" placeholder="ID"></td>
+      <td><input class="form-control form-control-sm" name="pescado_nome_comum[]" placeholder="Nome comum"></td>
+      <td><input class="form-control form-control-sm" type="date" name="pescado_inicio_safra[]"></td>
+      <td><input class="form-control form-control-sm" type="date" name="pescado_fim_safra[]"></td>
+      <td><button type="button" class="btn btn-outline-danger btn-sm remove-row">Remover</button></td>
+    </tr>
+  </template>
+
+  <template id="despesasRowTemplate">
+    <tr class="dyn-row">
+      <td><input class="form-control form-control-sm" name="despesa_nome[]"></td>
+      <td><input class="form-control form-control-sm" name="despesa_tipo[]"></td>
+      <td><input class="form-control form-control-sm" type="number" step="0.01" name="despesa_quantidade[]"></td>
+      <td><input class="form-control form-control-sm" name="despesa_unidade[]"></td>
+      <td><input class="form-control form-control-sm" type="number" step="0.01" name="despesa_custo[]"></td>
+      <td><input class="form-control form-control-sm" name="despesa_outros[]"></td>
+      <td>
+        <select class="form-select form-select-sm" name="despesa_frequencia[]">
+          <option value="">Selecione</option>
+          <option>Diária</option>
+          <option>Semanal</option>
+          <option>Mensal</option>
+          <option>Anual</option>
+        </select>
+      </td>
+      <td><button type="button" class="btn btn-outline-danger btn-sm remove-row">Remover</button></td>
+    </tr>
+  </template>
+
+  <script src="{{ url_for('static', filename='js/wizard.js') }}"></script>
+</body>
+</html>
