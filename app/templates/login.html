@@ -18,7 +18,7 @@
               {% endfor %}
             {% endif %}
           {% endwith %}
-          <form method="post" class="vstack gap-3" action="{{ url_for('main.login') }}">
+          <form method="post" class="vstack gap-3" action="{{ url_for('auth.login') }}">
             <div>
               <label class="form-label" for="email">Email</label>
               <input class="form-control form-control-lg" id="email" name="email" type="email" required>
