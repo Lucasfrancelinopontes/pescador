@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from app.repositories.embarcacao_repository import EmbarcacaoRepository
-from app.utils.serializers import audit_fields, parse_bool, parse_decimal, parse_float, parse_int, text_or_none
+from app.utils.serializers import audit_fields, first_non_empty, parse_bool, parse_decimal, parse_float, parse_int, text_or_none
 
 
 class EmbarcacaoService:

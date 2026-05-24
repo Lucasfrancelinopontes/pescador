@@ -5,19 +5,19 @@ from typing import Any
 from app.repositories.coleta_repository import ColetaRepository
 from app.services.embarcacao_service import EmbarcacaoService
 from app.services.pescador_service import PescadorService
-from app.utils.serializers import audit_fields, first_non_empty, parse_date, parse_int
+from app.utils.serializers import audit_fields, first_non_empty, parse_date, parse_int, text_or_none
 
 
 class ColetaService:
     def build_payload(self, form, user_id: str | None) -> dict[str, Any]:
         return {
-            "codigo_coleta": form.get("codigo_coleta", "").strip(),
-            "codigo_foto": form.get("codigo_foto", "").strip(),
+            "codigo_coleta": text_or_none(form.get("codigo_coleta")),
+            "codigo_foto": text_or_none(form.get("codigo_foto")),
             "municipio_id": parse_int(form.get("municipio_id")),
             "localidade_id": parse_int(form.get("localidade_id")),
             "data_coleta": parse_date(first_non_empty(form.get("data_coleta"), form.get("data"))),
             "data_digitacao": parse_date(first_non_empty(form.get("data_digitacao"), form.get("data_digitador"))),
-            "observacoes": form.get("observacoes", "").strip(),
+            "observacoes": text_or_none(form.get("observacoes")),
             **audit_fields(user_id),
         }
 
