@@ -22,6 +22,16 @@
   </header>
 
   <main class="container-fluid page-shell py-4 px-3 px-md-4 pb-5">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="mb-3">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }} mb-2" role="alert">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
     <div class="panel p-3 p-md-4 mb-4">
       <div class="d-flex flex-column flex-lg-row gap-3 align-items-lg-center justify-content-between">
         <div>

@@ -31,8 +31,8 @@ def formulario():
             coleta_service.submit_complete(client, request.form, session.get("user_id"))
             flash("Formulário salvo com sucesso.", "success")
             return redirect(url_for("main.formulario"))
-        except Exception:
-            flash("Não foi possível salvar os dados no Supabase.", "danger")
+        except Exception as exc:
+            flash(f"Não foi possível salvar os dados no Supabase: {exc}", "danger")
 
     return render_template("formulario.html")
 
