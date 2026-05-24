@@ -13,8 +13,8 @@ class ColetaService:
         return {
             "codigo_coleta": form.get("codigo_coleta", "").strip(),
             "codigo_foto": form.get("codigo_foto", "").strip(),
-            "municipio_id": parse_int(first_non_empty(form.get("municipio_id"), form.get("municipio"))),
-            "localidade_id": parse_int(first_non_empty(form.get("localidade_id"), form.get("localidade"))),
+            "municipio_id": parse_int(form.get("municipio_id")),
+            "localidade_id": parse_int(form.get("localidade_id")),
             "data_coleta": parse_date(first_non_empty(form.get("data_coleta"), form.get("data"))),
             "data_digitacao": parse_date(first_non_empty(form.get("data_digitacao"), form.get("data_digitador"))),
             "observacoes": form.get("observacoes", "").strip(),
