@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const finishBtn = document.getElementById('finishBtn');
   const wizardForm = document.getElementById('wizardForm');
   const progressBar = document.getElementById('wizardProgressBar');
+  const codigoColetaHidden = document.getElementById('codigoColetaHidden');
+  const codigoColetaParts = Array.from(document.querySelectorAll('.codigo-coleta-part'));
   let currentStep = 0;
 
   if (!steps.length || !stepList) {
@@ -61,6 +63,33 @@ document.addEventListener('DOMContentLoaded', () => {
   if (nextBtn) nextBtn.addEventListener('click', () => goToStep(currentStep + 1));
   if (resetBtn) resetBtn.addEventListener('click', () => wizardForm && wizardForm.reset());
   if (finishBtn && wizardForm) finishBtn.addEventListener('click', () => wizardForm.requestSubmit());
+
+  function syncCodigoColeta() {
+    if (!codigoColetaHidden || !codigoColetaParts.length) {
+      return;
+    }
+    codigoColetaHidden.value = codigoColetaParts.map((input) => input.value.trim()).join('');
+  }
+
+  codigoColetaParts.forEach((input, index) => {
+    input.addEventListener('input', (event) => {
+      const value = event.target.value.replace(/\s+/g, '').slice(0, 1);
+      event.target.value = value;
+      if (value && index < codigoColetaParts.length - 1) {
+        codigoColetaParts[index + 1].focus();
+      }
+      syncCodigoColeta();
+    });
+    input.addEventListener('keydown', (event) => {
+      if (event.key === 'Backspace' && !input.value && index > 0) {
+        codigoColetaParts[index - 1].focus();
+      }
+    });
+  });
+
+  if (wizardForm) {
+    wizardForm.addEventListener('submit', syncCodigoColeta);
+  }
 
   function addPescadoRow() {
     const template = document.getElementById('pescadoRowTemplate');
@@ -156,5 +185,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   buildStepper();
   syncStepper();
+  syncCodigoColeta();
   bindRemoveRowButtons();
 });
