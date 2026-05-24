@@ -180,6 +180,8 @@ def create_supabase_client(access_token: str | None = None, purpose: str = "rest
     settings = get_settings()
     # Futuras integrações com auditoria, service role e persistência avançada podem ser centralizadas aqui.
     key = settings.auth_key if purpose == "auth" else settings.rest_key
+    if purpose == "rest":
+        return _HTTPClient(settings.url, key, access_token)
     if supabase_create_client is not None:
         client = supabase_create_client(settings.url, key)
         if access_token and hasattr(client, "postgrest"):
