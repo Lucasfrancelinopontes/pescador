@@ -5,7 +5,7 @@ from typing import Any
 from app.repositories.coleta_repository import ColetaRepository
 from app.services.embarcacao_service import EmbarcacaoService
 from app.services.pescador_service import PescadorService
-from app.utils.serializers import audit_fields, parse_date, first_non_empty
+from app.utils.serializers import audit_fields, first_non_empty, parse_date, parse_int
 
 
 class ColetaService:
@@ -13,8 +13,8 @@ class ColetaService:
         return {
             "codigo_coleta": form.get("codigo_coleta", "").strip(),
             "codigo_foto": form.get("codigo_foto", "").strip(),
-            "municipio_id": form.get("municipio_id", form.get("municipio", "")).strip(),
-            "localidade_id": form.get("localidade_id", form.get("localidade", "")).strip(),
+            "municipio_id": parse_int(first_non_empty(form.get("municipio_id"), form.get("municipio"))),
+            "localidade_id": parse_int(first_non_empty(form.get("localidade_id"), form.get("localidade"))),
             "data_coleta": parse_date(first_non_empty(form.get("data_coleta"), form.get("data"))),
             "data_digitacao": parse_date(first_non_empty(form.get("data_digitacao"), form.get("data_digitador"))),
             "observacoes": form.get("observacoes", "").strip(),
