@@ -99,3 +99,10 @@ def first_non_empty(*values: Any, default: Any = None):
             continue
         return value
     return default
+
+
+def text_or_none(value: Any):
+    if value is None:
+        return None
+    text = str(value).strip()
+    return text or None
