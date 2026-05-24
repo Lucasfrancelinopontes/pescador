@@ -4,7 +4,9 @@ from dataclasses import dataclass
 from types import SimpleNamespace
 from typing import Any
 from urllib.error import HTTPError, URLError
+from urllib.parse import urlencode
 from urllib.request import Request, urlopen
+from decimal import Decimal
 
 from app.utils.env import load_env_file
 
@@ -69,7 +71,7 @@ class _HTTPInsertBuilder:
             "accept": "application/json",
             "prefer": "return=representation",
         }
-        payload = json.dumps(self._payload, ensure_ascii=False).encode("utf-8")
+        payload = json.dumps(self._payload, ensure_ascii=False, default=self._json_default).encode("utf-8")
         request_obj = Request(endpoint, data=payload, headers=headers, method="POST")
         try:
             with urlopen(request_obj, timeout=30) as response:
@@ -81,6 +83,12 @@ class _HTTPInsertBuilder:
             raise RuntimeError(f"Erro ao inserir no Supabase: {detail}") from error
         except URLError as error:
             raise RuntimeError(f"Erro de conexão com o Supabase: {error}") from error
+
+    @staticmethod
+    def _json_default(value):
+        if isinstance(value, Decimal):
+            return float(value)
+        raise TypeError(f"Object of type {type(value).__name__} is not JSON serializable")
 
 
 class _HTTPDeleteBuilder:
@@ -118,6 +126,47 @@ class _HTTPDeleteBuilder:
             raise RuntimeError(f"Erro de conexão com o Supabase: {error}") from error
 
 
+class _HTTPSelectBuilder:
+    def __init__(self, client, table_name: str, columns: str = "*"):
+        self._client = client
+        self._table_name = table_name
+        self._columns = columns
+        self._filters: list[tuple[str, str]] = []
+        self._limit: int | None = None
+
+    def eq(self, column: str, value):
+        self._filters.append((column, str(value)))
+        return self
+
+    def limit(self, value: int):
+        self._limit = value
+        return self
+
+    def execute(self):
+        query_params: list[tuple[str, str]] = [("select", self._columns)]
+        query_params.extend((column, f"eq.{value}") for column, value in self._filters)
+        if self._limit is not None:
+            query_params.append(("limit", str(self._limit)))
+
+        endpoint = f"{self._client.base_url}/rest/v1/{self._table_name}?{urlencode(query_params)}"
+        headers = {
+            "apikey": self._client.api_key,
+            "authorization": f"Bearer {self._client.access_token or self._client.api_key}",
+            "accept": "application/json",
+        }
+        request_obj = Request(endpoint, headers=headers, method="GET")
+        try:
+            with urlopen(request_obj, timeout=30) as response:
+                raw = response.read().decode("utf-8")
+                data = json.loads(raw) if raw else []
+                return SimpleNamespace(data=data)
+        except HTTPError as error:
+            detail = error.read().decode("utf-8", errors="replace")
+            raise RuntimeError(f"Erro ao consultar no Supabase: {detail}") from error
+        except URLError as error:
+            raise RuntimeError(f"Erro de conexão com o Supabase: {error}") from error
+
+
 class _HTTPTableClient:
     def __init__(self, client, table_name: str):
         self._client = client
@@ -125,6 +174,9 @@ class _HTTPTableClient:
 
     def insert(self, payload: dict):
         return _HTTPInsertBuilder(self._client, self._table_name, payload)
+
+    def select(self, columns: str = "*"):
+        return _HTTPSelectBuilder(self._client, self._table_name, columns)
 
     def delete(self):
         return _HTTPDeleteBuilder(self._client, self._table_name)

@@ -3,28 +3,35 @@ from __future__ import annotations
 from typing import Any
 
 from app.repositories.embarcacao_repository import EmbarcacaoRepository
-from app.utils.serializers import audit_fields, first_non_empty, parse_bool, parse_decimal, parse_float, parse_int, text_or_none
+from app.utils.serializers import audit_fields, first_non_empty, normalize_enum_text, parse_bool, parse_decimal, parse_float, parse_int, text_or_none
 
 
 class EmbarcacaoService:
     def build_payload(self, form, user_id: str | None, pescador_id: str | None = None) -> dict[str, Any]:
+        status_financeiro = text_or_none(form.get("status_financeiro"))
+        if not status_financeiro:
+            if form.get("quitada"):
+                status_financeiro = "quitada"
+            elif form.get("financiada"):
+                status_financeiro = "financiada"
+
         return {
             "pescador_id": pescador_id,
             "pesca_embarcada": parse_bool(form.get("pesca_embarcada")),
             "embarcacao_propria": parse_bool(form.get("embarcacao_propria")),
-            "status_financeiro": text_or_none(form.get("status_financeiro")),
+            "status_financeiro": normalize_enum_text(status_financeiro),
             "nome_proprietario": text_or_none(form.get("nome_proprietario")),
             "apelido_proprietario": text_or_none(form.get("apelido_proprietario")),
-            "cilindros_hp": parse_float(form.get("cilindros_hp")),
+            "cilindros_hp": parse_float(first_non_empty(form.get("cilindros_hp"), form.get("cilindros"))),
             "porto_origem": text_or_none(form.get("porto_origem")),
             "porto_desembarque": text_or_none(form.get("porto_desembarque")),
             "nome_embarcacao": text_or_none(form.get("nome_embarcacao")),
-            "comprimento_m": parse_float(form.get("comprimento_m")),
+            "comprimento_m": parse_float(first_non_empty(form.get("comprimento_m"), form.get("comprimento"))),
             "num_registro": text_or_none(first_non_empty(form.get("num_registro"), form.get("numero_registro"))),
-            "largura_m": parse_float(form.get("largura_m")),
-            "tonelada_bruta_ab": parse_float(form.get("tonelada_bruta_ab", form.get("tonelada_bruta", ""))),
-            "material_casco": text_or_none(form.get("material_casco")),
-            "capacidade_tripulacao": parse_int(form.get("capacidade_tripulacao")),
+            "largura_m": parse_float(first_non_empty(form.get("largura_m"), form.get("largura"))),
+            "tonelada_bruta_ab": parse_float(first_non_empty(form.get("tonelada_bruta_ab"), form.get("tonelada_bruta"))),
+            "material_casco": self._normalize_material_casco(form.get("material_casco")),
+            "capacidade_tripulacao": parse_int(first_non_empty(form.get("capacidade_tripulacao"), form.get("tripulacao"))),
             "ano_construcao": parse_int(form.get("ano_construcao")),
             "registro_capitania": parse_bool(form.get("registro_capitania")),
             "registro_rgp": parse_bool(form.get("registro_rgp")),
@@ -53,6 +60,19 @@ class EmbarcacaoService:
             raise
 
         return embarcacao_id
+
+    def _normalize_material_casco(self, value: Any):
+        normalized = normalize_enum_text(value)
+        if not normalized:
+            return None
+
+        aliases = {
+            "fibra_de_vidro": "fibra",
+            "fibra_vidro": "fibra",
+            "fibra": "fibra",
+            "madeira": "madeira",
+        }
+        return aliases.get(normalized, normalized)
 
     def _extract_id(self, response):
         data = getattr(response, "data", None)

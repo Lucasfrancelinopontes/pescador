@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import unicodedata
 from datetime import date, datetime, timezone
 from decimal import Decimal
 from typing import Any
@@ -106,3 +107,11 @@ def text_or_none(value: Any):
         return None
     text = str(value).strip()
     return text or None
+
+
+def normalize_enum_text(value: Any):
+    text = text_or_none(value)
+    if not text:
+        return None
+    normalized = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
+    return normalized.strip().lower().replace(" ", "_")

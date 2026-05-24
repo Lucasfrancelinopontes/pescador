@@ -33,6 +33,7 @@ def formulario():
             return redirect(url_for("main.formulario"))
         except Exception as exc:
             flash(f"Não foi possível salvar os dados no Supabase: {exc}", "danger")
+            return redirect(url_for("main.formulario"))
 
     return render_template("formulario.html")
 

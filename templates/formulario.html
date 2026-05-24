@@ -57,16 +57,10 @@
           <h2 class="h5 step-card-title">Código, foto, município e localidade</h2>
         </div>
         <div class="row g-3">
-          <input type="hidden" name="codigo_coleta" id="codigoColetaHidden">
           <div class="col-12 col-md-6 col-xl-3">
             <label class="form-label">Código coleta</label>
             <div class="d-flex flex-wrap gap-1">
-              <input class="form-control input-mini codigo-coleta-part" maxlength="1" autocomplete="off" aria-label="Código coleta 1">
-              <input class="form-control input-mini codigo-coleta-part" maxlength="1" autocomplete="off" aria-label="Código coleta 2">
-              <input class="form-control input-mini codigo-coleta-part" maxlength="1" autocomplete="off" aria-label="Código coleta 3">
-              <input class="form-control input-mini codigo-coleta-part" maxlength="1" autocomplete="off" aria-label="Código coleta 4">
-              <input class="form-control input-mini codigo-coleta-part" maxlength="1" autocomplete="off" aria-label="Código coleta 5">
-              <input class="form-control input-mini codigo-coleta-part" maxlength="1" autocomplete="off" aria-label="Código coleta 6">
+              <input class="form-control codigo-coleta" name="codigo_coleta" autocomplete="off" aria-label="Código coleta">
             </div>
           </div>
           <div class="col-12 col-md-6 col-xl-3">
@@ -149,10 +143,10 @@
           <h2 class="h5 step-card-title">Condições de saúde</h2>
         </div>
         <div class="row g-3">
-          <div class="col-12 col-md-4"><div class="form-check"><input class="form-check-input health-check" type="checkbox" id="vista"><label class="form-check-label" for="vista">Vista</label></div></div>
-          <div class="col-12 col-md-4"><div class="form-check"><input class="form-check-input health-check" type="checkbox" id="pele"><label class="form-check-label" for="pele">Pele</label></div></div>
-          <div class="col-12 col-md-4"><div class="form-check"><input class="form-check-input health-check" type="checkbox" id="coluna"><label class="form-check-label" for="coluna">Coluna</label></div></div>
-          <div class="col-12 col-md-4"><div class="form-check"><input class="form-check-input health-check" type="checkbox" id="ginecologico"><label class="form-check-label" for="ginecologico">Ginecológico</label></div></div>
+          <div class="col-12 col-md-4"><div class="form-check"><input class="form-check-input health-check" type="checkbox" id="vista" name="saude_vista"><label class="form-check-label" for="vista">Vista</label></div></div>
+          <div class="col-12 col-md-4"><div class="form-check"><input class="form-check-input health-check" type="checkbox" id="pele" name="saude_pele"><label class="form-check-label" for="pele">Pele</label></div></div>
+          <div class="col-12 col-md-4"><div class="form-check"><input class="form-check-input health-check" type="checkbox" id="coluna" name="saude_coluna"><label class="form-check-label" for="coluna">Coluna</label></div></div>
+          <div class="col-12 col-md-4"><div class="form-check"><input class="form-check-input health-check" type="checkbox" id="ginecologico" name="saude_ginecologico"><label class="form-check-label" for="ginecologico">Ginecológico</label></div></div>
           <div class="col-12 col-md-4">
             <div class="form-check"><input class="form-check-input health-check" type="checkbox" id="saudeOutrosCheck"><label class="form-check-label" for="saudeOutrosCheck">Outros</label></div>
           </div>
@@ -171,11 +165,11 @@
         <div class="row g-3">
           <div class="col-12 col-lg-4">
             <label class="form-label">Registro INSS</label>
-            <input class="form-control" name="registro_inss">
+            <input class="form-control" name="registro_inss" placeholder="sim/não">
           </div>
           <div class="col-12 col-lg-4">
             <label class="form-label">Registro colônia</label>
-            <input class="form-control" name="registro_colonia" id="registroColoniaInput">
+            <input class="form-control" name="registro_colonia" id="registroColoniaInput" placeholder="sim/não">
           </div>
           <div class="col-12 col-lg-4" id="qualColoniaWrap" style="display:none;">
             <label class="form-label">Qual colônia</label>
@@ -183,7 +177,7 @@
           </div>
           <div class="col-12 col-lg-4">
             <label class="form-label">Registro associação</label>
-            <input class="form-control" name="registro_associacao" id="registroAssociacaoInput">
+            <input class="form-control" name="registro_associacao" id="registroAssociacaoInput" placeholder="sim/não">
           </div>
           <div class="col-12 col-lg-4" id="qualAssociacaoWrap" style="display:none;">
             <label class="form-label">Qual associação</label>
@@ -316,7 +310,7 @@
           <h2 class="h5 step-card-title">Uso, propriedade e conservação</h2>
         </div>
         <div class="row g-3">
-          <div class="col-12 col-lg-4"><label class="form-label">Petrechos próprios</label><input class="form-control" name="petrechos_proprios"></div>
+          <div class="col-12 col-lg-4"><label class="form-label">Petrechos próprios</label><input class="form-control" name="petrechos_proprios" placeholder="sim/não"></div>
           <div class="col-12 col-lg-4"><label class="form-label">Se não, de quem</label><input class="form-control" name="petrechos_de_quem"></div>
           <div class="col-12 col-lg-4"><label class="form-label">Conservação pescado</label><input class="form-control" name="conservacao_pescado"></div>
         </div>
@@ -354,10 +348,10 @@
           <h2 class="h5 step-card-title">Estrutura de propriedade</h2>
         </div>
         <div class="row g-3">
-          <div class="col-12 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" id="pescaEmbarcada"><label class="form-check-label" for="pescaEmbarcada">Pesca embarcada</label></div></div>
-          <div class="col-12 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" id="embarcacaoPropria"><label class="form-check-label" for="embarcacaoPropria">Embarcação própria</label></div></div>
-          <div class="col-12 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" id="financiada"><label class="form-check-label" for="financiada">Financiada</label></div></div>
-          <div class="col-12 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" id="quitada"><label class="form-check-label" for="quitada">Quitada</label></div></div>
+          <div class="col-12 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" id="pescaEmbarcada" name="pesca_embarcada"><label class="form-check-label" for="pescaEmbarcada">Pesca embarcada</label></div></div>
+          <div class="col-12 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" id="embarcacaoPropria" name="embarcacao_propria"><label class="form-check-label" for="embarcacaoPropria">Embarcação própria</label></div></div>
+          <div class="col-12 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" id="financiada" name="financiada"><label class="form-check-label" for="financiada">Financiada</label></div></div>
+          <div class="col-12 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" id="quitada" name="quitada"><label class="form-check-label" for="quitada">Quitada</label></div></div>
           <div class="col-12 col-lg-6"><label class="form-label">Nome proprietário</label><input class="form-control" name="nome_proprietario"></div>
           <div class="col-12 col-lg-6"><label class="form-label">Apelido proprietário</label><input class="form-control" name="apelido_proprietario"></div>
         </div>
@@ -369,11 +363,11 @@
           <h2 class="h5 step-card-title">Sistema de deslocamento</h2>
         </div>
         <div class="row g-3">
-          <div class="col-6 col-md-2"><div class="form-check"><input class="form-check-input" type="checkbox" id="vela"><label class="form-check-label" for="vela">Vela</label></div></div>
-          <div class="col-6 col-md-2"><div class="form-check"><input class="form-check-input" type="checkbox" id="motor"><label class="form-check-label" for="motor">Motor</label></div></div>
-          <div class="col-6 col-md-2"><div class="form-check"><input class="form-check-input" type="checkbox" id="remo"><label class="form-check-label" for="remo">Remo</label></div></div>
-          <div class="col-6 col-md-2"><div class="form-check"><input class="form-check-input" type="checkbox" id="vara"><label class="form-check-label" for="vara">Vara</label></div></div>
-          <div class="col-6 col-md-2"><div class="form-check"><input class="form-check-input" type="checkbox" id="rabeta"><label class="form-check-label" for="rabeta">Rabeta</label></div></div>
+          <div class="col-6 col-md-2"><div class="form-check"><input class="form-check-input" type="checkbox" id="vela" name="embarcacao_propulsao" value="vela"><label class="form-check-label" for="vela">Vela</label></div></div>
+          <div class="col-6 col-md-2"><div class="form-check"><input class="form-check-input" type="checkbox" id="motor" name="embarcacao_propulsao" value="motor"><label class="form-check-label" for="motor">Motor</label></div></div>
+          <div class="col-6 col-md-2"><div class="form-check"><input class="form-check-input" type="checkbox" id="remo" name="embarcacao_propulsao" value="remo"><label class="form-check-label" for="remo">Remo</label></div></div>
+          <div class="col-6 col-md-2"><div class="form-check"><input class="form-check-input" type="checkbox" id="vara" name="embarcacao_propulsao" value="vara"><label class="form-check-label" for="vara">Vara</label></div></div>
+          <div class="col-6 col-md-2"><div class="form-check"><input class="form-check-input" type="checkbox" id="rabeta" name="embarcacao_propulsao" value="rabeta"><label class="form-check-label" for="rabeta">Rabeta</label></div></div>
           <div class="col-12 col-md-4"><label class="form-label">Cilindros/hp</label><input class="form-control" name="cilindros_hp"></div>
         </div>
       </section>
@@ -412,10 +406,10 @@
           <h2 class="h5 step-card-title">Documentação da embarcação</h2>
         </div>
         <div class="row g-3">
-          <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" id="capitaniaEmbarcacao"><label class="form-check-label" for="capitaniaEmbarcacao">Capitania</label></div></div>
-          <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" id="rgp"><label class="form-check-label" for="rgp">RGP</label></div></div>
-          <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" id="ibama"><label class="form-check-label" for="ibama">IBAMA</label></div></div>
-          <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" id="mpa"><label class="form-check-label" for="mpa">MPA</label></div></div>
+          <div class="col-12 col-md-4"><div class="form-check"><input class="form-check-input" type="checkbox" id="capitaniaEmbarcacao" name="registro_capitania"><label class="form-check-label" for="capitaniaEmbarcacao">Capitania</label></div></div>
+          <div class="col-12 col-md-4"><div class="form-check"><input class="form-check-input" type="checkbox" id="rgp" name="registro_rgp"><label class="form-check-label" for="rgp">RGP</label></div></div>
+          <div class="col-12 col-md-4"><div class="form-check"><input class="form-check-input" type="checkbox" id="ibama" name="licenciamento_ibama"><label class="form-check-label" for="ibama">IBAMA</label></div></div>
+          <div class="col-12 col-md-4"><div class="form-check"><input class="form-check-input" type="checkbox" id="mpa" name="licenciamento_mpa"><label class="form-check-label" for="mpa">MPA</label></div></div>
         </div>
       </section>
 
@@ -446,8 +440,8 @@
           <h2 class="h5 step-card-title">Entrega e dívida</h2>
         </div>
         <div class="row g-3">
-          <div class="col-12 col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" id="entregaAtravessador"><label class="form-check-label" for="entregaAtravessador">Entrega pescado atravessador</label></div></div>
-          <div class="col-12 col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" id="dividaAtravessador"><label class="form-check-label" for="dividaAtravessador">Dívida atravessador</label></div></div>
+          <div class="col-12 col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" id="entregaAtravessador" name="entrega_atravessador"><label class="form-check-label" for="entregaAtravessador">Entrega pescado atravessador</label></div></div>
+          <div class="col-12 col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" id="dividaAtravessador" name="divida_com_atravessador"><label class="form-check-label" for="dividaAtravessador">Dívida atravessador</label></div></div>
         </div>
       </section>
 
@@ -530,10 +524,10 @@
       <td>
         <select class="form-select form-select-sm" name="despesa_frequencia[]">
           <option value="">Selecione</option>
-          <option>Diária</option>
-          <option>Semanal</option>
-          <option>Mensal</option>
-          <option>Anual</option>
+          <option value="diaria">Diária</option>
+          <option value="semanal">Semanal</option>
+          <option value="mensal">Mensal</option>
+          <option value="anual">Anual</option>
         </select>
       </td>
       <td><button type="button" class="btn btn-outline-danger btn-sm remove-row">Remover</button></td>
