@@ -67,11 +67,15 @@
           </div>
           <div class="col-12 col-md-6 col-xl-3">
             <label class="form-label">Município</label>
-            <input class="form-control" name="municipio" placeholder="Município">
+            <select class="form-select" name="municipio_id" id="municipioSelect">
+              <option value="">Carregando...</option>
+            </select>
           </div>
           <div class="col-12 col-md-6 col-xl-3">
             <label class="form-label">Localidade</label>
-            <input class="form-control" name="localidade" placeholder="Localidade">
+            <select class="form-select" name="localidade_id" id="localidadeSelect">
+              <option value="">Selecione um município primeiro</option>
+            </select>
           </div>
         </div>
       </section>
@@ -529,5 +533,73 @@
   </template>
 
   <script src="{{ url_for('static', filename='js/wizard.js') }}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const municipioSelect = document.getElementById('municipioSelect');
+      const localidadeSelect = document.getElementById('localidadeSelect');
+
+      function setLocalidadePlaceholder() {
+        localidadeSelect.innerHTML = '<option value="">Selecione um município primeiro</option>';
+      }
+
+      // Inicializa localidade
+      setLocalidadePlaceholder();
+
+      // Carrega municípios
+      fetch('/municipios', { credentials: 'same-origin' })
+        .then(res => {
+          if (!res.ok || res.redirected) {
+            throw res;
+          }
+          return res.json();
+        })
+        .then(data => {
+          if (!Array.isArray(data)) return;
+          const options = ['<option value="">Selecione</option>'].concat(
+            data.map(m => `<option value="${m.id}">${m.nome}</option>`)
+          );
+          municipioSelect.innerHTML = options.join('');
+        })
+        .catch(err => {
+          console.error('Erro ao obter municípios', err);
+          municipioSelect.innerHTML = '<option value="">Erro ao carregar municípios</option>';
+          // se foi redirecionamento para login, avisar o usuário
+          if (err && typeof err === 'object' && err.url && err.url.includes('/auth/login')) {
+            municipioSelect.innerHTML = '<option value="">Faça login para carregar municípios</option>';
+          }
+        });
+
+      municipioSelect.addEventListener('change', function () {
+        const id = this.value;
+        if (!id) {
+          setLocalidadePlaceholder();
+          return;
+        }
+        localidadeSelect.innerHTML = '<option>Carregando...</option>';
+        fetch(`/localidades?municipio_id=${encodeURIComponent(id)}`, { credentials: 'same-origin' })
+          .then(res => {
+            if (!res.ok || res.redirected) throw res;
+            return res.json();
+          })
+          .then(data => {
+            if (!Array.isArray(data) || data.length === 0) {
+              localidadeSelect.innerHTML = '<option value="">Nenhuma localidade disponível</option>';
+              return;
+            }
+            const opts = ['<option value="">Selecione</option>'].concat(
+              data.map(l => `<option value="${l.id}">${l.nome}</option>`)
+            );
+            localidadeSelect.innerHTML = opts.join('');
+          })
+          .catch(err => {
+            console.error('Erro ao obter localidades', err);
+            localidadeSelect.innerHTML = '<option value="">Erro ao carregar localidades</option>';
+            if (err && typeof err === 'object' && err.url && err.url.includes('/auth/login')) {
+              localidadeSelect.innerHTML = '<option value="">Faça login para carregar localidades</option>';
+            }
+          });
+      });
+    });
+  </script>
 </body>
 </html>

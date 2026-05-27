@@ -48,3 +48,32 @@ def dashboard():
 @login_required
 def exportacao():
     return jsonify({"status": "ok", "message": "Exportação protegida disponível."})
+
+
+@bp.route("/municipios")
+def municipios():
+    if not session.get("access_token"):
+        return jsonify({"error": "not_authenticated"}), 401
+    client = create_supabase_client(session.get("access_token"))
+    try:
+        response = client.table("municipios").select("id,nome").execute()
+        data = response.data if getattr(response, "data", None) is not None else []
+        return jsonify([{"id": row.get("id"), "nome": row.get("nome")} for row in data])
+    except Exception as exc:
+        return jsonify({"error": str(exc)}), 500
+
+
+@bp.route("/localidades")
+def localidades():
+    if not session.get("access_token"):
+        return jsonify({"error": "not_authenticated"}), 401
+    municipio_id = request.args.get("municipio_id")
+    if not municipio_id:
+        return jsonify({"error": "municipio_id parameter required"}), 400
+    client = create_supabase_client(session.get("access_token"))
+    try:
+        response = client.table("localidades").select("id,nome").eq("municipio_id", municipio_id).execute()
+        data = response.data if getattr(response, "data", None) is not None else []
+        return jsonify([{"id": row.get("id"), "nome": row.get("nome")} for row in data])
+    except Exception as exc:
+        return jsonify({"error": str(exc)}), 500
