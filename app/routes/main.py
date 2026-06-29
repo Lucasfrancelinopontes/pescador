@@ -89,7 +89,9 @@ def especies():
             for row in data
         ])
     except Exception as exc:
-        return jsonify({"error": str(exc)}), 500
+        import traceback
+        tb = traceback.format_exc()
+        return jsonify({"__debug__": True, "error": str(exc), "type": type(exc).__name__, "traceback": tb}), 200
 
 
 @bp.route("/localidades")
