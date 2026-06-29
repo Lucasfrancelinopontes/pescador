@@ -202,3 +202,14 @@ body {
   font-size: 0.78rem;
   font-style: italic;
 }
+
+.autocomplete-familia {
+  display: inline-block;
+  font-size: 0.73rem;
+  color: #fff;
+  background: #6c757d;
+  border-radius: 3px;
+  padding: 1px 5px;
+  margin-left: 4px;
+  vertical-align: middle;
+}

@@ -242,6 +242,9 @@ document.addEventListener('DOMContentLoaded', () => {
           `<span class="autocomplete-nome">${item.nome_comum}</span>` +
           (item.nome_cientifico
             ? ` <em class="autocomplete-cientifico">${item.nome_cientifico}</em>`
+            : '') +
+          (item.familia
+            ? ` <span class="autocomplete-familia">${item.familia}</span>`
             : '');
         li.addEventListener('mousedown', (e) => {
           e.preventDefault();

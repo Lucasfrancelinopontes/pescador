@@ -70,17 +70,22 @@ def especies():
     q = request.args.get("q", "").strip()
     client = create_supabase_client(session.get("access_token"))
     try:
-        query = client.table("especies").select("id,nome_comum,nome_cientifico")
+        query = client.table("Especies").select("id,nome_popular,nome_cientifico,familia")
         if q:
             try:
                 especie_id = int(q)
                 query = query.eq("id", especie_id)
             except ValueError:
-                query = query.ilike("nome_comum", f"%{q}%")
+                query = query.ilike("nome_popular", f"%{q}%")
         response = query.order("id").limit(200).execute()
         data = response.data if getattr(response, "data", None) is not None else []
         return jsonify([
-            {"id": row.get("id"), "nome_comum": row.get("nome_comum"), "nome_cientifico": row.get("nome_cientifico")}
+            {
+                "id": row.get("id"),
+                "nome_comum": row.get("nome_popular"),
+                "nome_cientifico": row.get("nome_cientifico"),
+                "familia": row.get("familia"),
+            }
             for row in data
         ])
     except Exception as exc:
