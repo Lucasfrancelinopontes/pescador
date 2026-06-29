@@ -72,13 +72,12 @@ def especies():
     try:
         query = client.table("especies").select("id,nome_comum,nome_cientifico")
         if q:
-            # filtra por id numérico ou por nome (ilike)
             try:
                 especie_id = int(q)
                 query = query.eq("id", especie_id)
             except ValueError:
                 query = query.ilike("nome_comum", f"%{q}%")
-        response = query.order("id").limit(20).execute()
+        response = query.order("id").limit(200).execute()
         data = response.data if getattr(response, "data", None) is not None else []
         return jsonify([
             {"id": row.get("id"), "nome_comum": row.get("nome_comum"), "nome_cientifico": row.get("nome_cientifico")}

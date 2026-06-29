@@ -187,59 +187,122 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ── Autocomplete de espécies na tabela de pescado ────────────────────────
-  let especiesCache = [];
-  let especiesFetched = false;
+  let especiesCache = null;   // null = não carregado ainda, [] = carregado vazio
+  let especiesLoading = false;
 
-  function fetchEspecies(q) {
-    return fetch(`/especies?q=${encodeURIComponent(q)}`, { credentials: 'same-origin' })
+  function loadAllEspecies() {
+    if (especiesCache !== null || especiesLoading) return Promise.resolve(especiesCache || []);
+    especiesLoading = true;
+    return fetch('/especies?q=', { credentials: 'same-origin' })
       .then(res => res.ok ? res.json() : [])
-      .catch(() => []);
+      .catch(() => [])
+      .then(data => { especiesCache = data; especiesLoading = false; return data; });
+  }
+
+  function filterEspecies(items, q) {
+    if (!q) return items;
+    const lower = q.toLowerCase();
+    const asNum = parseInt(q, 10);
+    return items.filter(item =>
+      (!isNaN(asNum) && item.id === asNum) ||
+      (item.nome_comum && item.nome_comum.toLowerCase().includes(lower)) ||
+      (item.nome_cientifico && item.nome_cientifico.toLowerCase().includes(lower))
+    );
   }
 
   function bindEspeciesAutocomplete(row) {
-    const idInput = row.querySelector('.pescado-id-input');
+    const idInput  = row.querySelector('.pescado-id-input');
     const nomeInput = row.querySelector('.pescado-nome-input');
-    const list = row.querySelector('.autocomplete-list');
+    const list     = row.querySelector('.autocomplete-list');
     if (!idInput || !nomeInput || !list) return;
 
+    let highlighted = -1;
     let debounceTimer = null;
 
-    function showSuggestions(items) {
+    function renderList(items) {
       list.innerHTML = '';
-      if (!items.length) { list.style.display = 'none'; return; }
-      items.forEach(item => {
+      highlighted = -1;
+
+      if (!items.length) {
         const li = document.createElement('li');
-        li.className = 'px-2 py-1 autocomplete-item';
-        li.style.cursor = 'pointer';
-        li.style.fontSize = '0.85rem';
-        li.innerHTML = `<strong>#${item.id}</strong> ${item.nome_comum}${item.nome_cientifico ? ` <em class="text-muted">(${item.nome_cientifico})</em>` : ''}`;
+        li.className = 'px-3 py-2 text-muted';
+        li.style.fontSize = '0.82rem';
+        li.textContent = 'Nenhuma espécie encontrada';
+        list.appendChild(li);
+        list.style.display = 'block';
+        return;
+      }
+
+      items.forEach((item, idx) => {
+        const li = document.createElement('li');
+        li.className = 'autocomplete-item px-3 py-1';
+        li.dataset.idx = idx;
+        li.innerHTML =
+          `<span class="autocomplete-id">#${item.id}</span> ` +
+          `<span class="autocomplete-nome">${item.nome_comum}</span>` +
+          (item.nome_cientifico
+            ? ` <em class="autocomplete-cientifico">${item.nome_cientifico}</em>`
+            : '');
         li.addEventListener('mousedown', (e) => {
           e.preventDefault();
-          idInput.value = item.id;
-          nomeInput.value = item.nome_comum;
-          list.style.display = 'none';
+          selectItem(item);
         });
         list.appendChild(li);
       });
       list.style.display = 'block';
     }
 
+    function selectItem(item) {
+      idInput.value   = item.id;
+      nomeInput.value = item.nome_comum;
+      list.style.display = 'none';
+      highlighted = -1;
+    }
+
+    function openDropdown() {
+      loadAllEspecies().then(all => {
+        const q = idInput.value.trim();
+        renderList(filterEspecies(all, q));
+      });
+    }
+
+    idInput.addEventListener('focus', openDropdown);
+
     idInput.addEventListener('input', () => {
       clearTimeout(debounceTimer);
-      const q = idInput.value.trim();
-      if (!q) { list.style.display = 'none'; nomeInput.value = ''; return; }
+      if (!idInput.value.trim()) nomeInput.value = '';
       debounceTimer = setTimeout(() => {
-        fetchEspecies(q).then(showSuggestions);
-      }, 250);
+        if (especiesCache !== null) {
+          renderList(filterEspecies(especiesCache, idInput.value.trim()));
+        } else {
+          openDropdown();
+        }
+      }, 150);
+    });
+
+    idInput.addEventListener('keydown', (e) => {
+      const items = list.querySelectorAll('.autocomplete-item');
+      if (!items.length || list.style.display === 'none') return;
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        highlighted = Math.min(highlighted + 1, items.length - 1);
+        items.forEach((el, i) => el.classList.toggle('autocomplete-item--active', i === highlighted));
+        items[highlighted]?.scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        highlighted = Math.max(highlighted - 1, 0);
+        items.forEach((el, i) => el.classList.toggle('autocomplete-item--active', i === highlighted));
+        items[highlighted]?.scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'Enter' && highlighted >= 0) {
+        e.preventDefault();
+        items[highlighted].dispatchEvent(new MouseEvent('mousedown'));
+      } else if (e.key === 'Escape') {
+        list.style.display = 'none';
+      }
     });
 
     idInput.addEventListener('blur', () => {
-      setTimeout(() => { list.style.display = 'none'; }, 200);
-    });
-
-    idInput.addEventListener('focus', () => {
-      const q = idInput.value.trim();
-      if (q) fetchEspecies(q).then(showSuggestions);
+      setTimeout(() => { list.style.display = 'none'; highlighted = -1; }, 200);
     });
   }
 

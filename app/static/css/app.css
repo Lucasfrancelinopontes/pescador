@@ -153,3 +153,52 @@ body {
 .autocomplete-item:hover {
   background-color: var(--bs-primary-bg-subtle, #e8f0fe);
 }
+
+/* ── Autocomplete espécies ── */
+.autocomplete-list {
+  list-style: none;
+  padding: 4px 0;
+  margin: 0;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,.12);
+  max-height: 220px;
+  overflow-y: auto;
+  z-index: 1050;
+  font-size: 0.83rem;
+  scrollbar-width: thin;
+}
+
+.autocomplete-item {
+  cursor: pointer;
+  padding: 5px 12px;
+  line-height: 1.4;
+  transition: background 0.1s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item--active {
+  background-color: #e8f0fe;
+}
+
+.autocomplete-id {
+  display: inline-block;
+  min-width: 36px;
+  font-weight: 700;
+  color: #1a73e8;
+  font-size: 0.78rem;
+}
+
+.autocomplete-nome {
+  color: #212529;
+}
+
+.autocomplete-cientifico {
+  color: #6c757d;
+  font-size: 0.78rem;
+  font-style: italic;
+}
