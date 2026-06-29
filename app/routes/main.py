@@ -74,10 +74,11 @@ def especies():
         if q:
             try:
                 especie_id = int(q)
-                query = query.eq("id", especie_id)
+                response = query.eq("id", especie_id).execute()
             except ValueError:
-                query = query.ilike("nome_popular", f"%{q}%")
-        response = query.order("id").limit(200).execute()
+                response = query.ilike("nome_popular", f"%{q}%").execute()
+        else:
+            response = query.execute()
         data = response.data if getattr(response, "data", None) is not None else []
         return jsonify([
             {
@@ -89,9 +90,7 @@ def especies():
             for row in data
         ])
     except Exception as exc:
-        import traceback
-        tb = traceback.format_exc()
-        return jsonify({"__debug__": True, "error": str(exc), "type": type(exc).__name__, "traceback": tb}), 200
+        return jsonify({"error": str(exc)}), 500
 
 
 @bp.route("/localidades")
