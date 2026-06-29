@@ -148,3 +148,8 @@ body {
     radial-gradient(circle at 80% 0%, rgba(25, 135, 84, 0.07), transparent 20%),
     linear-gradient(180deg, #f8fafc 0%, #eef3f8 100%);
 }
+
+/* ── Autocomplete espécies ── */
+.autocomplete-item:hover {
+  background-color: var(--bs-primary-bg-subtle, #e8f0fe);
+}

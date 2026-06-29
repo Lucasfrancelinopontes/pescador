@@ -167,11 +167,19 @@
         <div class="row g-3">
           <div class="col-12 col-lg-4">
             <label class="form-label">Registro INSS</label>
-            <input class="form-control" name="registro_inss" placeholder="sim/não">
+            <select class="form-select" name="registro_inss">
+              <option value="">Selecione</option>
+              <option value="sim">Sim</option>
+              <option value="nao">Não</option>
+            </select>
           </div>
           <div class="col-12 col-lg-4">
             <label class="form-label">Registro colônia</label>
-            <input class="form-control" name="registro_colonia" id="registroColoniaInput" placeholder="sim/não">
+            <select class="form-select" name="registro_colonia" id="registroColoniaSelect">
+              <option value="">Selecione</option>
+              <option value="sim">Sim</option>
+              <option value="nao">Não</option>
+            </select>
           </div>
           <div class="col-12 col-lg-4" id="qualColoniaWrap" style="display:none;">
             <label class="form-label">Qual colônia</label>
@@ -179,7 +187,11 @@
           </div>
           <div class="col-12 col-lg-4">
             <label class="form-label">Registro associação</label>
-            <input class="form-control" name="registro_associacao" id="registroAssociacaoInput" placeholder="sim/não">
+            <select class="form-select" name="registro_associacao" id="registroAssociacaoSelect">
+              <option value="">Selecione</option>
+              <option value="sim">Sim</option>
+              <option value="nao">Não</option>
+            </select>
           </div>
           <div class="col-12 col-lg-4" id="qualAssociacaoWrap" style="display:none;">
             <label class="form-label">Qual associação</label>
@@ -312,7 +324,14 @@
           <h2 class="h5 step-card-title">Uso, propriedade e conservação</h2>
         </div>
         <div class="row g-3">
-          <div class="col-12 col-lg-4"><label class="form-label">Petrechos próprios</label><input class="form-control" name="petrechos_proprios" placeholder="sim/não"></div>
+          <div class="col-12 col-lg-4">
+            <label class="form-label">Petrechos próprios</label>
+            <select class="form-select" name="petrechos_proprios">
+              <option value="">Selecione</option>
+              <option value="sim">Sim</option>
+              <option value="nao">Não</option>
+            </select>
+          </div>
           <div class="col-12 col-lg-4"><label class="form-label">Se não, de quem</label><input class="form-control" name="petrechos_de_quem"></div>
           <div class="col-12 col-lg-4"><label class="form-label">Conservação pescado</label><input class="form-control" name="conservacao_pescado"></div>
         </div>
@@ -503,8 +522,11 @@
 
   <template id="pescadoRowTemplate">
     <tr class="dyn-row">
-      <td><input class="form-control form-control-sm" name="pescado_id[]" placeholder="ID"></td>
-      <td><input class="form-control form-control-sm" name="pescado_nome_comum[]" placeholder="Nome comum"></td>
+      <td style="min-width:110px; position:relative;">
+        <input class="form-control form-control-sm pescado-id-input" name="pescado_id[]" placeholder="ID ou nome" autocomplete="off">
+        <ul class="autocomplete-list list-unstyled mb-0 shadow-sm border rounded bg-white position-absolute w-100" style="z-index:1000; display:none; max-height:200px; overflow-y:auto; top:100%; left:0;"></ul>
+      </td>
+      <td><input class="form-control form-control-sm pescado-nome-input" name="pescado_nome_comum[]" placeholder="Nome comum" readonly></td>
       <td><input class="form-control form-control-sm" type="text" name="pescado_inicio_safra[]"></td>
       <td><input class="form-control form-control-sm" type="text" name="pescado_fim_safra[]"></td>
       <td><button type="button" class="btn btn-outline-danger btn-sm remove-row">Remover</button></td>

@@ -63,6 +63,31 @@ def municipios():
         return jsonify({"error": str(exc)}), 500
 
 
+@bp.route("/especies")
+def especies():
+    if not session.get("access_token"):
+        return jsonify({"error": "not_authenticated"}), 401
+    q = request.args.get("q", "").strip()
+    client = create_supabase_client(session.get("access_token"))
+    try:
+        query = client.table("especies").select("id,nome_comum,nome_cientifico")
+        if q:
+            # filtra por id numérico ou por nome (ilike)
+            try:
+                especie_id = int(q)
+                query = query.eq("id", especie_id)
+            except ValueError:
+                query = query.ilike("nome_comum", f"%{q}%")
+        response = query.order("id").limit(20).execute()
+        data = response.data if getattr(response, "data", None) is not None else []
+        return jsonify([
+            {"id": row.get("id"), "nome_comum": row.get("nome_comum"), "nome_cientifico": row.get("nome_cientifico")}
+            for row in data
+        ])
+    except Exception as exc:
+        return jsonify({"error": str(exc)}), 500
+
+
 @bp.route("/localidades")
 def localidades():
     if not session.get("access_token"):
